@@ -88,33 +88,33 @@ public class EntitySkeleton extends EntityLiving
 					if(yDist == 0)
 					{
 						facingDir = (xDist > 0) ? Direction.RIGHT : Direction.LEFT;
-						move(facingDir);
+						move(facingDir, true);
 					}
 					else if(xDist == 0)
 					{
 						facingDir = (yDist > 0) ? Direction.UP : Direction.DOWN;
-						move(facingDir);
+						move(facingDir, true);
 					}
 					else if(Game.rand.nextBoolean())
 					{
 						int oldX = xPos;
 						facingDir = (xDist > 0) ? Direction.RIGHT : Direction.LEFT;
-						move(facingDir);
+						move(facingDir, true);
 						if(oldX == xPos)
 						{
 							facingDir = (yDist > 0) ? Direction.UP : Direction.DOWN;
-							move(facingDir);
+							move(facingDir, true);
 						}
 					}
 					else
 					{
 						int oldY = yPos;
 						facingDir = (yDist > 0) ? Direction.UP : Direction.DOWN;
-						move(facingDir);
+						move(facingDir, true);
 						if(oldY == yPos)
 						{
 							facingDir = (xDist > 0) ? Direction.RIGHT : Direction.LEFT;
-							move(facingDir);
+							move(facingDir, true);
 						}
 					}
 				}
@@ -129,21 +129,32 @@ public class EntitySkeleton extends EntityLiving
 					else if(rand == 1) facingDir = Direction.DOWN;
 					else if(rand == 2) facingDir = Direction.LEFT;
 					else if(rand == 3) facingDir = Direction.RIGHT;
-					move(facingDir);
+					move(facingDir, true);
 					if(xPos != oldX || yPos != oldY) break;
 				}
 			}
 		}
 		else movementTimer--;
+		
+		super.tick();
 	}
 	
 	@Override
 	public void render(SpriteBatch batch, int camX, int camY)
 	{
+		int x = Game.xOffset + (xPos * 32) - camX;
+		int y = Game.yOffset + (yPos * 32) - camY;
+		
+		if(movementTransition)
+		{
+			x = Game.xOffset + transXPos - camX;
+			y = Game.yOffset + transYPos - camY;
+		}
+		
 		int texX = 0, texY = 0;
 		if(facingDir == Direction.DOWN || facingDir == Direction.RIGHT) texX += 32;
 		if(facingDir == Direction.LEFT || facingDir == Direction.DOWN) texY += 32;
-		batch.draw(tex, Game.xOffset + (xPos - camX) * 32, Game.yOffset + (yPos - camY) * 32, 32, 32, texX, texY, 32, 32, false, false);
+		batch.draw(tex, x, y, 32, 32, texX, texY, 32, 32, false, false);
 	}
 	
 	@Override

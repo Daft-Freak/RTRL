@@ -51,8 +51,8 @@ public class TileDoor extends Tile
 	public void render(SpriteBatch batch, int x, int y)
 	{
 		boolean doorHorizontal = (horizontal ^ opened);
-		int tileX = x + Game.camX;
-		int tileY = y + Game.camY;
+		int tileX = (x + Game.camX) / 32;
+		int tileY = (y + Game.camY) / 32;
 		if(!opened)
 		{
 			Tile t2 = map.tiles[doorHorizontal ? tileX : (tileX + 1)][doorHorizontal ? (tileY - 1) : tileY];
@@ -65,8 +65,9 @@ public class TileDoor extends Tile
 			if(light[2] == 0) light[2] = 1;
 			batch.setColor((float) (light[0] + 2) / 18f, (float) (light[1] + 2) / 18f, (float) (light[2] + 2) / 18f, 1);
 		}
-		batch.draw(Game.tileTex, Game.xOffset + x * 32, Game.yOffset + y * 32, 32, 32, 0, 0, 32, 32, false, false);
-		if(requiredKey == KeyType.NONE) batch.setColor(1, 1, 1, 1);
+		batch.draw(Game.tileTex, Game.xOffset + x, Game.yOffset + y, 32, 32, 0, 0, 32, 32, false, false);
+		
+		if(requiredKey == KeyType.NONE) batch.setColor(1, 1, 1, 1); 
 		else if(requiredKey == KeyType.RED) batch.setColor(1, 0, 0, 1);
 		else if(requiredKey == KeyType.ORANGE) batch.setColor(1, 0.6f, 0, 1);
 		else if(requiredKey == KeyType.YELLOW) batch.setColor(1, 1, 0, 1);
@@ -74,27 +75,21 @@ public class TileDoor extends Tile
 		else if(requiredKey == KeyType.BLUE) batch.setColor(0, 0, 1, 1);
 		else if(requiredKey == KeyType.VIOLET) batch.setColor(0.6f, 0, 1, 1);
 		else batch.setColor(0.2f, 0.2f, 0.2f, 1);
-		/* if(!opened)
-		 * {
-		 * Tile t2 =
-		 * map.tiles[doorHorizontal?tileX:(tileX+1)][doorHorizontal?(tileY
-		 * -1):tileY];
-		 * Tile t3 =
-		 * map.tiles[doorHorizontal?tileX:(tileX-1)][doorHorizontal?(tileY
-		 * +1):tileY];
-		 * int[] light = new int[]{t2.lightLevel[0], t2.lightLevel[1],
-		 * t2.lightLevel[2]};
-		 * if(t3.lightLevel[0] > light[0]) light[0] = t3.lightLevel[0];
-		 * if(t3.lightLevel[1] > light[0]) light[1] = t3.lightLevel[1];
-		 * if(t3.lightLevel[2] > light[0]) light[2] = t3.lightLevel[2];
-		 * if(light[0] == 0) light[0] = 1;
-		 * if(light[1] == 0) light[1] = 1;
-		 * if(light[2] == 0) light[2] = 1;
-		 * batch.setColor((float)(light[0]+2)/18f, (float)(light[1]+2)/18f,
-		 * (float)(light[2]+2)/18f, 1);
-		 * } */
+		/*if(!opened)
+		{
+			Tile t2 = map.tiles[doorHorizontal?tileX:(tileX+1)][doorHorizontal?(tileY-1):tileY];
+			Tile t3 = map.tiles[doorHorizontal?tileX:(tileX-1)][doorHorizontal?(tileY+1):tileY];
+			int[] light = new int[]{t2.lightLevel[0], t2.lightLevel[1], t2.lightLevel[2]};
+			if(t3.lightLevel[0] > light[0]) light[0] = t3.lightLevel[0];
+			if(t3.lightLevel[1] > light[0]) light[1] = t3.lightLevel[1];
+			if(t3.lightLevel[2] > light[0]) light[2] = t3.lightLevel[2];
+			if(light[0] == 0) light[0] = 1;
+			if(light[1] == 0) light[1] = 1;
+			if(light[2] == 0) light[2] = 1;
+			batch.setColor((float)(light[0]+2)/18f, (float)(light[1]+2)/18f, (float)(light[2]+2)/18f, 1);
+		}*/
 		int texX = doorHorizontal ? 0 : 32;
-		batch.draw(tex, Game.xOffset + x * 32, Game.yOffset + y * 32, 32, 32, texX, 0, 32, 32, false, false);
+		batch.draw(tex, Game.xOffset + x, Game.yOffset + y, 32, 32, texX, 0, 32, 32, false, false);
 	}
 	
 	@Override

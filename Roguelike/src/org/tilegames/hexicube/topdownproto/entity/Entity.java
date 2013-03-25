@@ -8,17 +8,65 @@ public abstract class Entity
 {
 	public int xPos, yPos;
 	
+	protected boolean movementTransition = false;
+	protected int oldXPos, oldYPos, transXPos, transYPos;
+	protected int moveTransitionTime, moveTransitionMaxTime = 15;
+	
 	public Map map;
 	
 	public Entity rider, riding;
 	
-	public abstract void tick();
+	public void tick()
+	{
+		if(movementTransition)
+		{
+			moveTransitionTime++;
+			
+			float s = (float)moveTransitionTime / (float)moveTransitionMaxTime;
+			
+			if(oldXPos == xPos)
+				transXPos = xPos * 32;
+			else
+			{
+				float oldXPixels = (float)oldXPos * 32.0f;
+				float newXPixels = (float)xPos * 32.0f;
+				transXPos = (int)(oldXPixels * (1.0f - s) + (newXPixels * s));
+			}
+			if(oldYPos == yPos)
+				transYPos = yPos * 32;
+			else
+			{
+				float oldYPixels = (float)oldYPos * 32.0f;
+				float newYPixels = (float)yPos * 32.0f;
+				transYPos = (int)(oldYPixels * (1.0f - s) + (newYPixels * s));
+			}
+			
+			if(moveTransitionTime == moveTransitionMaxTime)
+				movementTransition = false;
+		}
+	}
 	
 	public abstract void render(SpriteBatch batch, int camX, int camY);
 	
 	public abstract void collide(Entity entity);
 	
 	public abstract boolean visible(Entity looker);
+	
+	public void move(Direction dir, boolean transition)
+	{
+		if(transition)
+		{
+			movementTransition = true;
+			moveTransitionTime = 0;
+			oldXPos = xPos;
+			oldYPos = yPos;
+		}
+		
+		move(dir);
+		
+		if(transition && oldXPos == xPos && oldYPos == yPos)
+			movementTransition = false; //no movement actually happened
+	}
 	
 	public void move(Direction dir)
 	{

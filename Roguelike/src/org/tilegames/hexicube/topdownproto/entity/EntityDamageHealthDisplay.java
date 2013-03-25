@@ -42,7 +42,7 @@ public class EntityDamageHealthDisplay extends Entity
 		}
 		else batch.setColor(0, 1, 0, (float) (60 - timeLived) / 60);
 		char[] data = FontHolder.getCharList(Game.numToStr(amount));
-		FontHolder.render(batch, data, Game.xOffset + (xPos - camX) * 32 - FontHolder.getTextWidth(data, true) / 2 + 17, Game.yOffset + (yPos - camY) * 32 + 24, true);
+		FontHolder.render(batch, data, Game.xOffset + xPos * 32 - camX - FontHolder.getTextWidth(data, true) / 2 + 17, Game.yOffset + yPos * 32 - camY * 32 + 24, false);
 	}
 	
 	@Override

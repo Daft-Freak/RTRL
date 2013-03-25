@@ -294,12 +294,11 @@ public class Game implements ApplicationListener, InputProcessor
 		{
 			for(int y = 0; y < curMap.tiles[x].length; y++)
 			{
-				int tX = x - camX;
-				int tY = y - camY;
-				int tileX = tX * 32;
-				int tileY = tY * 32;
-				if(tileX + xOffset > screenW || tileY + yOffset > screenH || tileX + xOffset + 32 < 0 || tileY + yOffset + 32 < 0) continue;
-				spriteBatch.setColor((float) (curMap.tiles[x][y].lightLevel[0] + 3) / 18f, (float) (curMap.tiles[x][y].lightLevel[1] + 3) / 18f, (float) (curMap.tiles[x][y].lightLevel[2] + 3) / 18f, 1);
+				int tX = x * 32 - camX;
+				int tY = y * 32 - camY;
+				if(tX + xOffset > screenW || tY + yOffset > screenH || tX + xOffset + 32 < 0 || tY + yOffset + 32 < 0) continue;
+
+				spriteBatch.setColor((float) (curMap.tiles[x][y].lightLevel[0] + 3) / 18f, (float) (curMap.tiles[x][y].lightLevel[1] + 3) / 18f, (float)(curMap.tiles[x][y].lightLevel[2] + 3) / 18f, 1);
 				curMap.tiles[x][y].render(spriteBatch, tX, tY);
 			}
 		}
@@ -307,10 +306,8 @@ public class Game implements ApplicationListener, InputProcessor
 		for(int a = 0; a < size; a++)
 		{
 			Entity e = curMap.entities.get(a);
-			int eX = e.xPos - camX;
-			int eY = e.yPos - camY;
-			int entX = eX * 32;
-			int entY = eY * 32;
+			int entX = e.xPos * 32 - camX;
+			int entY = e.yPos * 32 - camY;
 			if(entX + xOffset > screenW || entY + yOffset > screenH || entX + xOffset + 32 < 0 || entY + yOffset + 32 < 0) continue;
 			Tile t = curMap.tiles[e.xPos][e.yPos];
 			boolean invis = !curMap.entities.get(a).visible(player);

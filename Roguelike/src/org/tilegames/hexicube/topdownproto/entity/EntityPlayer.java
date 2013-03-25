@@ -298,7 +298,7 @@ public class EntityPlayer extends EntityLiving
 				if(walkDelay == 0 && !Game.keysDown[9])
 				{
 					walkDelay = 15;
-					move(Direction.UP);
+					move(Direction.UP, true);
 					map.updateTexture(xPos, yPos);
 				}
 				facingDir = Direction.UP;
@@ -308,7 +308,7 @@ public class EntityPlayer extends EntityLiving
 				if(walkDelay == 0 && !Game.keysDown[9])
 				{
 					walkDelay = 15;
-					move(Direction.DOWN);
+					move(Direction.DOWN, true);
 					map.updateTexture(xPos, yPos);
 				}
 				facingDir = Direction.DOWN;
@@ -318,7 +318,7 @@ public class EntityPlayer extends EntityLiving
 				if(walkDelay == 0 && !Game.keysDown[9])
 				{
 					walkDelay = 15;
-					move(Direction.LEFT);
+					move(Direction.LEFT, true);
 					map.updateTexture(xPos, yPos);
 				}
 				facingDir = Direction.LEFT;
@@ -328,7 +328,7 @@ public class EntityPlayer extends EntityLiving
 				if(walkDelay == 0 && !Game.keysDown[9])
 				{
 					walkDelay = 15;
-					move(Direction.RIGHT);
+					move(Direction.RIGHT, true);
 					map.updateTexture(xPos, yPos);
 				}
 				facingDir = Direction.RIGHT;
@@ -368,8 +368,20 @@ public class EntityPlayer extends EntityLiving
 		}
 		if(walkDelay > 0) walkDelay--;
 		if(useDelay > 0) useDelay--;
-		Game.camX = xPos;
-		Game.camY = yPos;
+		
+		super.tick();
+		
+		//update movement transition
+		if(movementTransition)
+		{
+			Game.camX = transXPos;
+			Game.camY = transYPos;
+		}
+		else
+		{
+			Game.camX = xPos * 32;
+			Game.camY = yPos * 32;
+		}
 	}
 	
 	@Override
@@ -378,9 +390,19 @@ public class EntityPlayer extends EntityLiving
 		int texX = 0, texY = 0;
 		if(facingDir == Direction.DOWN || facingDir == Direction.RIGHT) texX += 32;
 		if(facingDir == Direction.LEFT || facingDir == Direction.DOWN) texY += 32;
-		batch.draw(tex, Game.xOffset + (xPos - camX) * 32, Game.yOffset + (yPos - camY) * 32, 32, 32, texX, texY, 32, 32, false, false);
-		// TODO: animation render (do I want to have animations?)
-		if(rider != null) rider.render(batch, camX, camY);
+		
+		int x = Game.xOffset + (xPos * 32) - camX;
+		int y = Game.yOffset + (yPos * 32) - camY;
+		
+		if(movementTransition)
+		{
+			x = Game.xOffset + transXPos - camX;
+			y = Game.yOffset + transYPos - camY;
+		}
+		
+		batch.draw(tex, x, y, 32, 32, texX, texY, 32, 32, false, false);
+		//TODO: animation render (do I want to have animations?)
+        if(rider != null) rider.render(batch, camX, camY);
 	}
 	
 	@Override
