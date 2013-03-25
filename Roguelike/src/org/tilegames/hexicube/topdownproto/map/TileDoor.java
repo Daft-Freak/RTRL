@@ -65,7 +65,7 @@ public class TileDoor extends Tile
 			if(light[2] == 0) light[2] = 1;
 			batch.setColor((float) (light[0] + 2) / 18f, (float) (light[1] + 2) / 18f, (float) (light[2] + 2) / 18f, 1);
 		}
-		batch.draw(Game.tileTex, Game.xOffset + x, Game.yOffset + y, 32, 32, 0, 0, 32, 32, false, false);
+		renderBaseTile(batch, x, y, 0, 0);
 		
 		if(requiredKey == KeyType.NONE) batch.setColor(1, 1, 1, 1); 
 		else if(requiredKey == KeyType.RED) batch.setColor(1, 0, 0, 1);

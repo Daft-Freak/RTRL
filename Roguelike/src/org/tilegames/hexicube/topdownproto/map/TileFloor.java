@@ -24,7 +24,7 @@ public class TileFloor extends Tile
 	@Override
 	public void render(SpriteBatch batch, int x, int y)
 	{
-		batch.draw(Game.tileTex, Game.xOffset + x, Game.yOffset + y, 32, 32, 0, 0, 32, 32, false, false);
+		renderBaseTile(batch, x, y, 0, 0);
 	}
 	
 	@Override

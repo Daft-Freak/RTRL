@@ -1,6 +1,5 @@
 package org.tilegames.hexicube.topdownproto.map;
 
-import org.tilegames.hexicube.topdownproto.Game;
 import org.tilegames.hexicube.topdownproto.entity.Entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,7 +23,7 @@ public class TileWall extends Tile
 	@Override
 	public void render(SpriteBatch batch, int x, int y)
 	{
-		batch.draw(Game.tileTex, Game.xOffset + x, Game.yOffset + y, 32, 32, 32, 0, 32, 32, false, false);
+		renderBaseTile(batch, x, y, 32, 0);
 	}
 	
 	@Override
