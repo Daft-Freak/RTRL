@@ -10,7 +10,9 @@ public class Main
 	public static void main(String[] args)
 	{
 		config = new LwjglApplicationConfiguration();
-		config.title = "Game loading...";
+
+		config.title = Game.gameName;
+
 		config.width = 800;
 		config.height = 600;
 		config.useGL20 = false;
