@@ -44,3 +44,6 @@
     * What this does: Bites you, leaving a poison in your bloodstream which kills you after a few minutes unless you have a healing potion or antidote handy.  
     * What can beat this: Blunt damage, sharp damage, ice.  
 * Will list more when ideas come through.  
+
+##HTML test version
+https://dl.dropbox.com/u/17360362/RTRL-html/index.html
