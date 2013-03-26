@@ -26,8 +26,11 @@ public class EntitySkeleton extends EntityLiving
 		alive = true;
 		xPos = x;
 		yPos = y;
+
 		facingDir = Direction.UP;
 		effects = new ArrayList<Effect>();
+		
+		moveTransitionMaxTime = 45;
 	}
 	
 	@Override
