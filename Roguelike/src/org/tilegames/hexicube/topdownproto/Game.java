@@ -35,6 +35,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -630,8 +631,17 @@ public class Game implements ApplicationListener, InputProcessor
 	{
 		name = "images/" + name;
 		if(!File.separator.equals("/")) name.replace("/", File.separator);
-		return new Texture(Gdx.files.internal(name + ".png"));
+
+		FileHandle handle = Gdx.files.internal(name + ".png");
+		if(!handle.exists())
+		{
+			System.err.println("Failed to load image \"" + name + ".png\"!");
+			return null;
+		}
+		
+		return new Texture(handle);
 	}
+	
 	
 	public static Sound loadSound(String name)
 	{
