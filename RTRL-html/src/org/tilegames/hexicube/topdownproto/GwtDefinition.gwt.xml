@@ -4,5 +4,5 @@
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='Game' />
 	<entry-point class='org.tilegames.hexicube.topdownproto.client.GwtLauncher' />
-	<set-configuration-property name="gdx.assetpath" value="../RTRL-android/assets" />
+	<set-configuration-property name="gdx.assetpath" value="../assets" />
 </module>
