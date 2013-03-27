@@ -5,4 +5,6 @@
 	<inherits name='Game' />
 	<entry-point class='org.tilegames.hexicube.topdownproto.client.GwtLauncher' />
 	<set-configuration-property name="gdx.assetpath" value="../assets" />
+
+	<set-property name="user.agent" value="gecko1_8,safari,opera" />
 </module>
