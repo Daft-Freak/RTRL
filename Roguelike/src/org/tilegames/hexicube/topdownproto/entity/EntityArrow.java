@@ -25,6 +25,8 @@ public class EntityArrow extends Entity
 		yPos = y;
 		this.type = type;
 		flightTime = 0;
+		
+		moveTransitionMaxTime = 5;
 	}
 	
 	@Override
@@ -36,20 +38,31 @@ public class EntityArrow extends Entity
 		{
 			timer = 5;
 			int oldX = xPos, oldY = yPos;
-			move(direction);
+			move(direction, true);
 			flightTime++;
 			if((oldX == xPos && oldY == yPos) || flightTime >= 10) Game.removeEntity(this);
 		}
+		
+		super.tick();
 	}
 	
 	@Override
 	public void render(SpriteBatch batch, int camX, int camY)
 	{
+		int x = Game.xOffset + (xPos * 32) - camX;
+		int y = Game.yOffset + (yPos * 32) - camY;
+		
+		if(movementTransition)
+		{
+			x = Game.xOffset + transXPos - camX;
+			y = Game.yOffset + transYPos - camY;
+		}
+		
 		int texX = 0, texY = 0;
 		if(direction == Direction.DOWN || direction == Direction.RIGHT) texX += 32;
 		if(direction == Direction.LEFT || direction == Direction.DOWN) texX += 64;
 		texY = type.ID * 32;
-		batch.draw(tex, Game.xOffset + xPos * 32 - camX, Game.yOffset + yPos * 32 - camY, 32, 32, texX, texY, 32, 32, false, false);
+		batch.draw(tex, x, y, 32, 32, texX, texY, 32, 32, false, false);
 	}
 	
 	@Override
