@@ -22,6 +22,8 @@ public class EntityLeechBolt extends Entity
 		xPos = x;
 		yPos = y;
 		flightTime = 0;
+		
+		moveTransitionMaxTime = 5;
 	}
 	
 	@Override
@@ -33,16 +35,27 @@ public class EntityLeechBolt extends Entity
 		{
 			timer = 5;
 			int oldX = xPos, oldY = yPos;
-			move(direction);
+			move(direction, true);
 			flightTime++;
 			if((oldX == xPos && oldY == yPos) || flightTime >= 10) Game.removeEntity(this);
 		}
+		
+		super.tick();
 	}
 	
 	@Override
 	public void render(SpriteBatch batch, int camX, int camY)
 	{
-		batch.draw(tex, Game.xOffset + (xPos - camX) * 32, Game.yOffset + (yPos - camY) * 32);
+		int x = Game.xOffset + (xPos * 32) - camX;
+		int y = Game.yOffset + (yPos * 32) - camY;
+		
+		if(movementTransition)
+		{
+			x = Game.xOffset + transXPos - camX;
+			y = Game.yOffset + transYPos - camY;
+		}
+		
+		batch.draw(tex, x, y);
 	}
 	
 	@Override
