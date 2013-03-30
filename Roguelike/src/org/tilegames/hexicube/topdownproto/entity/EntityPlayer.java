@@ -12,6 +12,7 @@ import org.tilegames.hexicube.topdownproto.item.usable.ItemUsable;
 import org.tilegames.hexicube.topdownproto.item.weapon.DamageType;
 import org.tilegames.hexicube.topdownproto.map.Tile;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -171,7 +172,7 @@ public class EntityPlayer extends EntityLiving
 			// 4/5/6/8 -> left/down/right/up
 			// 7 -> use on self
 			// 9 -> unused
-			if(Game.keyPress[8])
+			if(Game.keyPress[Keys.NUM_1])
 			{
 				if(invSelectY == -1 && canMoveItem(invX, invY))
 				{
@@ -193,7 +194,7 @@ public class EntityPlayer extends EntityLiving
 					}
 				}
 			}
-			if(Game.keyPress[9])
+			if(Game.keyPress[Keys.NUM_2])
 			{
 				if(canMoveItem(invX, invY))
 				{
@@ -228,27 +229,27 @@ public class EntityPlayer extends EntityLiving
 					}
 				}
 			}
-			if(Game.keyPress[10])
+			if(Game.keyPress[Keys.NUM_3])
 			{
 				if(canMoveItem(invX, invY)) setItemInSlot(invX, invY, null);
 			}
-			if(Game.keyPress[15])
+			if(Game.keyPress[Keys.NUM_8])
 			{
 				if(invY > 0) invY--;
 			}
-			if(Game.keyPress[12])
+			if(Game.keyPress[Keys.NUM_5])
 			{
 				if(invY < 10) invY++;
 			}
-			if(Game.keyPress[11])
+			if(Game.keyPress[Keys.NUM_4])
 			{
 				if(invX > 0) invX--;
 			}
-			if(Game.keyPress[13])
+			if(Game.keyPress[Keys.NUM_6])
 			{
 				if(invX < 9) invX++;
 			}
-			if(Game.keyPress[14])
+			if(Game.keyPress[Keys.NUM_7])
 			{
 				if(useDelay == 0)
 				{
@@ -270,7 +271,7 @@ public class EntityPlayer extends EntityLiving
 			// 4/5/6/8 -> left/down/right/up
 			// 7 -> open door
 			// 9 -> use held item
-			if(Game.keysDown[14])
+			if(Game.keysDown[Keys.NUM_7])
 			{
 				if(useDelay == 0)
 				{
@@ -293,7 +294,7 @@ public class EntityPlayer extends EntityLiving
 					}
 				}
 			}
-			if(Game.keysDown[15])
+			if(Game.keysDown[Keys.NUM_8])
 			{
 				if(walkDelay == 0 && !Game.keysDown[9])
 				{
@@ -303,7 +304,7 @@ public class EntityPlayer extends EntityLiving
 				}
 				facingDir = Direction.UP;
 			}
-			else if(Game.keysDown[12])
+			else if(Game.keysDown[Keys.NUM_5])
 			{
 				if(walkDelay == 0 && !Game.keysDown[9])
 				{
@@ -313,7 +314,7 @@ public class EntityPlayer extends EntityLiving
 				}
 				facingDir = Direction.DOWN;
 			}
-			else if(Game.keysDown[11])
+			else if(Game.keysDown[Keys.NUM_4])
 			{
 				if(walkDelay == 0 && !Game.keysDown[9])
 				{
@@ -323,7 +324,7 @@ public class EntityPlayer extends EntityLiving
 				}
 				facingDir = Direction.LEFT;
 			}
-			else if(Game.keysDown[13])
+			else if(Game.keysDown[Keys.NUM_6])
 			{
 				if(walkDelay == 0 && !Game.keysDown[9])
 				{
@@ -333,12 +334,12 @@ public class EntityPlayer extends EntityLiving
 				}
 				facingDir = Direction.RIGHT;
 			}
-			if(Game.keyPress[8])
+			if(Game.keyPress[Keys.NUM_1])
 			{
 				if(heldItem == null) Game.message("You have no held item to use on yourself!");
 				else heldItem.use(this, Direction.NONE);
 			}
-			else if(Game.keysDown[16])
+			else if(Game.keysDown[Keys.NUM_9])
 			{
 				if(useDelay == 0)
 				{
@@ -356,7 +357,7 @@ public class EntityPlayer extends EntityLiving
 				}
 			}
 		}
-		if(Game.keyPress[7])
+		if(Game.keyPress[Keys.NUM_0])
 		{
 			viewingInventory = !viewingInventory;
 			if(viewingInventory)
