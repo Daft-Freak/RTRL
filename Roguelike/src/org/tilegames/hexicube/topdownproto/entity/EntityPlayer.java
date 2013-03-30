@@ -12,6 +12,7 @@ import org.tilegames.hexicube.topdownproto.item.usable.ItemUsable;
 import org.tilegames.hexicube.topdownproto.item.weapon.DamageType;
 import org.tilegames.hexicube.topdownproto.map.Tile;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -573,7 +574,53 @@ public class EntityPlayer extends EntityLiving
 		}
 		return true;
 	}
-	
+
+	public void handleInventoryTouch(int x, int y)
+	{
+		int xOff = Gdx.graphics.getWidth() / 2 - 197;
+		int yOff = Gdx.graphics.getHeight() / 2 - 197;
+		
+		//work out slot
+		int invX = (x - xOff) / 40;
+		int invY = (y - yOff) / 40;
+		
+		int invButtonPosX = x - xOff - invX * 40;
+		int invButtonPosY = y - yOff - invY * 40;
+		
+		if(invButtonPosX < 34 && invButtonPosY < 34 && invX >= 0 && invY >= 0 && invX < 10 && invY < 11)
+		{
+			//double tap (selection)
+			if(this.invX == invX && this.invY == invY)
+			{
+				if(invSelectY == -1 && canMoveItem(invX, invY))
+				{
+					invSelectX = invX;
+					invSelectY = invY;
+				}
+				else if(invSelectX == invX && invSelectY == invY)
+				{
+					invSelectY = -1;
+				}
+
+			}
+			else if(invSelectY != -1 && canMoveItem(invX, invY))
+			{
+				Item i1 = getItemInSlot(invX, invY);
+				Item i2 = getItemInSlot(invSelectX, invSelectY);
+				if(setItemInSlot(invX, invY, i2))
+				{
+					if(setItemInSlot(invSelectX, invSelectY, i1)) invSelectY = -1;
+					else setItemInSlot(invX, invY, i1);
+				}
+			}
+			
+			
+			this.invX = invX;
+			this.invY = invY;
+		}
+		
+	}
+
 	@Override
 	public boolean mountable(Entity mounter)
 	{

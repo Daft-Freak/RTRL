@@ -34,8 +34,8 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
@@ -80,6 +80,8 @@ public class Game implements ApplicationListener, InputProcessor
 	private static ArrayList<Message> messages;
 	
 	public static EntityPlayer player;
+
+	public static boolean hasTouch;
 	
 	@Override
 	public void create()
@@ -97,6 +99,12 @@ public class Game implements ApplicationListener, InputProcessor
 		invUsedBar = loadImage("usagebar");
 		statusTex = loadImage("status");
 		statusBarTex = loadImage("statusbar");
+
+		hasTouch = Gdx.input.isPeripheralAvailable(Peripheral.MultitouchScreen);
+		if(hasTouch)
+		{
+			touchInputTex = loadImage("touchbuttons");
+		}
 		
 		rand = new Random();
 		
@@ -330,6 +338,23 @@ public class Game implements ApplicationListener, InputProcessor
 			e.render(spriteBatch, camX, camY);
 		}
 		
+		
+		//touch input render
+		if(hasTouch)
+		{
+			spriteBatch.setColor(1, 1, 1, 1);
+			spriteBatch.draw(touchInputTex, 5, 150, 64, 64, 0, 64, 64, 64, false, false);
+			
+			if(!player.viewingInventory)
+			{
+				int dirYPos = 150;
+				spriteBatch.draw(touchInputTex, screenW - 69 * 3, dirYPos     , 64, 64, 128, 0, 64, 64, false, false); // left
+				spriteBatch.draw(touchInputTex, screenW - 69    , dirYPos     , 64, 64, 192, 0, 64, 64, false, false); // right
+				spriteBatch.draw(touchInputTex, screenW - 69 * 2, dirYPos + 69, 64, 64, 0  , 0, 64, 64, false, false); // up
+				spriteBatch.draw(touchInputTex, screenW - 69 * 2, dirYPos - 69, 64, 64, 64 , 0, 64, 64, false, false); // down
+			}
+		}
+		
 		spriteBatch.setColor(1, 1, 1, 1);
 		if(player.viewingInventory)
 		{
@@ -486,6 +511,20 @@ public class Game implements ApplicationListener, InputProcessor
 				FontHolder.render(spriteBatch, FontHolder.getCharList(itemName), xPos + 4, 488 + yPos, false);
 			}
 			else FontHolder.render(spriteBatch, FontHolder.getCharList(itemName), xPos + 4, 508 + yPos, false);
+			
+			//inv touch input
+			if(hasTouch && player.invSelectY != -1)
+			{
+				spriteBatch.draw(touchInputTex, xPos + 405, yPos + 448         , 64, 64, 0  , 128, 64, 64, false, false); //drop
+				spriteBatch.draw(touchInputTex, xPos + 405, yPos + 448 - 69    , 64, 64, 64 , 128, 64, 64, false, false); //dispose
+				spriteBatch.draw(touchInputTex, xPos + 405, yPos + 448 - 69 * 2, 64, 64, 128, 128, 64, 64, false, false); //use
+			}
+		}
+
+		if(hasTouch)
+		{
+			spriteBatch.setColor(1, 1, 1, 1);
+			spriteBatch.draw(touchInputTex, 0, 0); // TODO: fix co-ords
 		}
 		
 		if(frameRate < 30) spriteBatch.setColor(1, 0, 0, 1);
@@ -603,12 +642,35 @@ public class Game implements ApplicationListener, InputProcessor
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button)
 	{
+		if(hasTouch)
+		{
+			if(button == Input.Buttons.LEFT)
+			{
+				int key = getTouchKeyAtPos(x, y);
+				if(key != -1)
+					keysDown[key] = false;
+				else if(player.viewingInventory)
+					player.handleInventoryTouch(x, y);
+			}
+		}
 		return false;
 	}
 	
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button)
 	{
+		if(hasTouch)
+		{
+			if(button == Input.Buttons.LEFT)
+			{
+				int key = getTouchKeyAtPos(x, y);
+				if(key != -1)
+				{
+					keysDown[key] = true;
+					keyPress[key] = true;
+				}
+			}
+		}
 		return false;
 	}
 	
@@ -979,7 +1041,39 @@ public class Game implements ApplicationListener, InputProcessor
 	{
 		return (int) Math.pow(2, Math.ceil(Math.log(val) / Math.log(2)));
 	}
-	
+
+	public int getTouchKeyAtPos(int x, int y)
+	{
+		int screenW = Gdx.graphics.getWidth();
+		int screenH = Gdx.graphics.getHeight();
+		
+		y = screenH - y;
+		
+		int dirYPos = 150;
+		
+		int invXPos = screenW / 2 - 200;
+		int invYPos = screenH / 2 - 240 - 32;
+		
+		if(!player.viewingInventory && y >= dirYPos && y < dirYPos + 64 && x >= screenW - 69 * 3 && x < screenW - 69 * 3 + 64)
+			return Keys.NUM_4; //left
+		else if(!player.viewingInventory && y >= dirYPos && y < dirYPos + 64 && x >= screenW - 69 && x < screenW - 69 + 64)
+			return Keys.NUM_6; //right
+		else if(!player.viewingInventory && y >= dirYPos + 69 && y < dirYPos + 69 + 64 && x >= screenW - 69 * 2 && x < screenW - 69 * 2 + 64)
+			return Keys.NUM_8; //up
+		else if(!player.viewingInventory && y >= dirYPos - 69 && y < dirYPos - 69 + 64 && x >= screenW - 69 * 2 && x < screenW - 69 * 2 + 64)
+			return Keys.NUM_5; //down
+		else if(y >= dirYPos && y < dirYPos + 64 && x >= 5 * 3 && x < 5 + 64)
+			return Keys.NUM_0; //inv open/close
+		else if(player.viewingInventory && player.invSelectY != -1 && x >= invXPos + 405 && x < invXPos + 405 + 64 && y >= invYPos + 448 && y < invYPos + 448 + 64)
+			return Keys.NUM_2; //drop
+		else if(player.viewingInventory && player.invSelectY != -1 && x >= invXPos + 405 && x < invXPos + 405 + 64 && y >= invYPos + 448 - 69 && y < invYPos + 448 - 69 + 64)
+			return Keys.NUM_3; //dispose
+		else if(player.viewingInventory && player.invSelectY != -1 && x >= invXPos + 405 && x < invXPos + 405 + 64 && y >= invYPos + 448 - 69 * 2 && y < invYPos + 448 - 69 * 2 + 64)
+			return Keys.NUM_7; //use
+		
+		return -1;
+	}
+
 	public static String romanNumerals(int val)
 	{
 		String str = "";
